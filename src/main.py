@@ -117,6 +117,7 @@ Your responses are fed into a text to speech model.
                 # TODO: Send system command to robot to follow the user
                 tool_response = "Now following the user. The robot now follows the user to their destination"
             elif function_name == "pick_up_bag":
+                # TODO: Send system command to start picking up the bag
                 tool_response = "Starting to pick up bag..."
             elif function_name == "list_bags":
                 tool_response = "[green, purple]"
