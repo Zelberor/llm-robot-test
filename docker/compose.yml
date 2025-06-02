@@ -23,5 +23,7 @@ services:
         - USER_GID=${USER_GID}
     command: bash -c "sleep infinity"
     user: ${USER_UID}:${USER_GID}
-    volumes: 
+    volumes:
       - ../:/workspace
+    environment:
+      - OLLAMA_HOST=ollama
