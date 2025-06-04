@@ -49,7 +49,7 @@ def call_model(client: Client, messages: list):
         model="arl-robot-assistant",
         messages=messages,
         tools=[pick_up_bag_tool, list_bags_tool, follow_me_tool, get_status_tool],
-        think=True,
+        think=False,
         stream=True,
     )
     return stream
@@ -111,6 +111,7 @@ Your responses are fed into a text to speech model.
         messages.append({"role": "assistant", "content": robot_answer})
 
         for tool_call in tool_calls:
+            available_bags = ["green", "purple"]
             print(f"\n>>LLM executed tool call: {tool_call}<<")
             function_name = tool_call.function.name
             if function_name == "follow_me":
@@ -118,9 +119,16 @@ Your responses are fed into a text to speech model.
                 tool_response = "Now following the user. The robot now follows the user to their destination"
             elif function_name == "pick_up_bag":
                 # TODO: Send system command to start picking up the bag
-                tool_response = "Starting to pick up bag..."
+                if 'color' in tool_call.function.arguments:
+                    bag_color = tool_call.function.arguments['color']
+                    if bag_color in available_bags:
+                        tool_response = "Starting to pick up bag..."
+                    else:
+                        tool_response = f"Error: No bag colored {bag_color} available."
+                else:
+                    tool_response = "Error: Tool argument color not set."
             elif function_name == "list_bags":
-                tool_response = "[green, purple]"
+                tool_response = f"{available_bags}"
             elif function_name == "get_robot_status":
                 tool_response = "Chilling out..."
             else:
